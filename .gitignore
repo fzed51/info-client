@@ -1,0 +1,10 @@
+# COMPOSER
+###########
+/vendor/
+
+# IDE
+######
+/.idea/
+
+# PROJECT
+#########
