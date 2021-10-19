@@ -9,9 +9,13 @@ namespace InfoClient;
 class InfoClient
 {
 
-    /** @var array donnee du serveur */
+    /** @var array<string,string> donnee du serveur */
     private array $server;
 
+    /**
+     * constructeur
+     * @param array<string,string>|null $stubServer pour les tests
+     */
     public function __construct(?array $stubServer = null)
     {
         $this->server = array_change_key_case($stubServer ?? $_SERVER, CASE_UPPER);
