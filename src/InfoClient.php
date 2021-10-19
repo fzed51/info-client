@@ -8,6 +8,15 @@ namespace InfoClient;
  */
 class InfoClient
 {
+
+    /** @var array donnee du serveur */
+    private array $server;
+
+    public function __construct(?array $stubServer = null)
+    {
+        $this->server = array_change_key_case($stubServer ?? $_SERVER, CASE_UPPER);
+    }
+
     /**
      * donne l'adresse IP du client
      * @return string|null
@@ -15,18 +24,18 @@ class InfoClient
     public function getIp(): ?string
     {
         $keysRef = ['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'];
-        $keysServer = array_keys($_SERVER);
+        $keysServer = array_keys($this->server);
         /** @var ?string $keyFound */
         $keyFound = null;
         foreach ($keysServer as $key) {
-            if (!is_null($keyFound) && in_array(strtoupper($key), $keysRef)) {
+            if (is_null($keyFound) && in_array($key, $keysRef, true)) {
                 $keyFound = $key;
             }
         }
         if (is_null($keyFound)) {
             return null;
         }
-        foreach (explode(',', $_SERVER[$keyFound]) as $ip) {
+        foreach (explode(',', $this->server[$keyFound]) as $ip) {
             $ip = trim($ip);
             if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
                 return $ip;
@@ -42,9 +51,9 @@ class InfoClient
      */
     public function getAgent(): ?string
     {
-        if (!array_key_exists('HTTP_USER_AGENT', $_SERVER) || trim($_SERVER['HTTP_USER_AGENT']) === '') {
+        if (!array_key_exists('HTTP_USER_AGENT', $this->server) || trim($this->server['HTTP_USER_AGENT']) === '') {
             return null;
         }
-        return $_SERVER['HTTP_USER_AGENT'];
+        return $this->server['HTTP_USER_AGENT'];
     }
 }
