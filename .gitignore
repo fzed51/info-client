@@ -8,3 +8,5 @@
 
 # PROJECT
 #########
+/.phpunit.result.cache
+*.log
