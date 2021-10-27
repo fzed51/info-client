@@ -23,9 +23,10 @@ class InfoClient
 
     /**
      * donne l'adresse IP du client
+     * @param bool $allowAllRange
      * @return string|null
      */
-    public function getIp(): ?string
+    public function getIp(bool $allowAllRange = false): ?string
     {
         $keysRef = ['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'];
         $keysServer = array_keys($this->server);
@@ -39,9 +40,15 @@ class InfoClient
         if (is_null($keyFound)) {
             return null;
         }
+        $options = 0;
+        if(!$allowAllRange){
+            $options |= FILTER_FLAG_NO_PRIV_RANGE;
+            $options |= FILTER_FLAG_NO_RES_RANGE;
+        }
         foreach (explode(',', $this->server[$keyFound]) as $ip) {
             $ip = trim($ip);
-            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
+
+            if (filter_var($ip, FILTER_VALIDATE_IP, $options ) !== false) {
                 return $ip;
             }
         }

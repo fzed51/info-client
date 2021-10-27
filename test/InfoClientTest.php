@@ -21,6 +21,21 @@ class InfoClientTest extends TestCase
         assertEquals($SRV['HTTP_X_FORWARDED_FOR'], $client->getIp());
     }
 
+    /** test de getIp with private ip*/
+    public function testDontGetIpPrivate(): void
+    {
+        $SRV = ['HTTP_X_FORWARDED_FOR' => '127.0.0.1'];
+        $client = new InfoClient($SRV);
+        self::assertNull($client->getIp());
+    }
+
+    /** test de getIp with private ip and allow it*/
+    public function testGetIpPrivate(): void
+    {
+        $SRV = ['HTTP_X_FORWARDED_FOR' => '127.0.0.1'];
+        $client = new InfoClient($SRV);
+        assertEquals($SRV['HTTP_X_FORWARDED_FOR'], $client->getIp(true));
+    }
 
     /** test de getIp */
     public function testGetIpWithSpecificCase(): void
