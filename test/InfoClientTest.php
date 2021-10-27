@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace test;
+namespace Test;
 
 use InfoClient\InfoClient;
 use PHPUnit\Framework\TestCase;

@@ -8,6 +8,11 @@
             "InfoClient\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "test/"
+        }
+    },
     "authors": [
         {
             "name": "Fabien Sanchez",
